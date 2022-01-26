@@ -1,0 +1,51 @@
+name: Prepare new version
+
+on:
+  workflow_dispatch:
+    inputs:
+      next_version:
+        description: 'Next version (if empty - update by automatic patch). Please use semantic versioning'
+        required: false
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: get next tag
+        id: 'bump'
+        uses: allegro-actions/next-version@v1
+        with:
+          prefix: ''
+          force: ${{ github.event.inputs.next_version }}
+
+      - name: Create report file
+        run: date +%s > report.txt
+
+      - name: Setup git config
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+      
+      - name: Commit and push version bump
+        run: |
+          git checkout -b release/${{ steps.bump.outputs.next_tag }}
+          git add report.txt
+          git commit -m "Bump version to: ${{ steps.bump.outputs.next_tag }}"
+          # git tag ${{ steps.bump.outputs.next_tag }}
+          git push -u origin
+          # git push origin tag ${{ steps.bump.outputs.next_tag }}
+
+      - name: Create pull request
+        uses: repo-sync/pull-request@v2
+        with:
+          source_branch: "release/${{ steps.bump.outputs.next_tag }}"
+          destination_branch: "main"
+          pr_title: "Bump version ${{ steps.bump.outputs.next_tag }}"
+          pr_body: ":crown: *An automated PR*"             
+          pr_allow_empty: false                            
+          github_token: ${{ secrets.GITHUB_TOKEN }}   
+          
