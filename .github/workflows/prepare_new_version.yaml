@@ -8,7 +8,7 @@ on:
         required: false
 
 jobs:
-  report:
+  prepare_new_version:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -32,12 +32,14 @@ jobs:
       
       - name: Commit and push version bump
         run: |
-          git checkout -b release/${{ steps.bump.outputs.next_tag }}
+          VERSION=${{ steps.bump.outputs.next_tag }}
+          BRANCH_NAME=release/$VERSION
+          git checkout -b $BRANCH_NAME
           git add report.txt
-          git commit -m "Bump version to: ${{ steps.bump.outputs.next_tag }}"
-          # git tag ${{ steps.bump.outputs.next_tag }}
-          git push -u origin
-          # git push origin tag ${{ steps.bump.outputs.next_tag }}
+          git commit -m "Bump version to: $VERSION"
+          git push -u origin $BRANCH_NAME
+          git tag $VERSION
+          git push origin tag $VERSION
 
       - name: Create pull request
         uses: repo-sync/pull-request@v2
@@ -45,7 +47,16 @@ jobs:
           source_branch: "release/${{ steps.bump.outputs.next_tag }}"
           destination_branch: "main"
           pr_title: "Bump version ${{ steps.bump.outputs.next_tag }}"
-          pr_body: ":crown: *An automated PR*"             
+          pr_body: "## Note:\n
+              * This PR created by workflow\n
+            ## What:\n
+              * version bump\n
+              * commit tag\n
+              * updated podspec file\n
+            ## Why:\n
+              * preparing new version\n
+            ## Next steps:\n
+              * If you want to relase new version just merge this PR and release workflow will be automaticaly triggered"             
           pr_allow_empty: false                            
           github_token: ${{ secrets.GITHUB_TOKEN }}   
           
