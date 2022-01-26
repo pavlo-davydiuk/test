@@ -4,8 +4,11 @@ on:
   workflow_dispatch:
     inputs:
       next_version:
-        description: 'Next version (if empty - update by automatic patch). Please use semantic versioning'
+        description: "Next version (if empty - patch PATCH version will be incremented automatically). Please use semantic versioning"
         required: false
+
+env:
+  podspec_name: "TestKMP.podspec"
 
 jobs:
   prepare_new_version:
@@ -16,32 +19,28 @@ jobs:
           fetch-depth: 0
 
       - name: get next tag
-        id: 'bump'
+        id: "bump"
         uses: allegro-actions/next-version@v1
         with:
-          prefix: ''
+          prefix: ""
           force: ${{ github.event.inputs.next_version }}
 
       - name: Change version in podspec file
         run: |
-          pwd
-          ls
-          PODSPEC_NAME="TestKMP.podspec"
           VERSION=${{ steps.bump.outputs.next_tag }}
-          echo "Changing version in file $PODSPEC_NAME to: $VERSION"
-          sed -i -e "s/spec.version.*= .*$/spec\.version      = \"$VERSION\"/g" "$PODSPEC_NAME"
+          sed -i -e "s/spec.version.*= .*$/spec\.version      = \"$VERSION\"/g" "${{ env.podspec_name }}"
 
       - name: Setup git config
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
-      
+
       - name: Commit and push version bump
         run: |
           VERSION=${{ steps.bump.outputs.next_tag }}
           BRANCH_NAME=release/$VERSION
           git checkout -b $BRANCH_NAME
-          git add TestKMP.podspec
+          git add "${{ env.podspec_name }}"
           git commit -m "Bump version to: $VERSION"
           git push -u origin $BRANCH_NAME
           git tag $VERSION
@@ -54,15 +53,14 @@ jobs:
           destination_branch: "main"
           pr_title: "Bump version ${{ steps.bump.outputs.next_tag }}"
           pr_body: "## Note:\n
-              * This pull request is created by workflow 🤖\n
+            * This pull request is created by workflow 🤖\n
             ## What:\n
-              * version bump\n
-              * commit tag\n
-              * updated podspec file\n
+            * version bump\n
+            * commit tag\n
+            * updated podspec file\n
             ## Why:\n
-              * preparing new version\n
+            * preparing new version\n
             ## Next steps:\n
-              * If you want to relase this version just merge this PR and release workflow will be automaticaly triggered 🎉"             
-          pr_allow_empty: false                            
-          github_token: ${{ secrets.GITHUB_TOKEN }}   
-          
+            * If you want to relase this version just merge this PR and release workflow will be automaticaly triggered 🎉"
+          pr_allow_empty: false
+          github_token: ${{ secrets.GITHUB_TOKEN }}
