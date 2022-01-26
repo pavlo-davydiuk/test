@@ -32,12 +32,14 @@ jobs:
       
       - name: Commit and push version bump
         run: |
-          git checkout -b release/${{ steps.bump.outputs.next_tag }}
+          VERSION=${{ steps.bump.outputs.next_tag }}
+          BRANCH_NAME=release/$VERSION
+          git checkout -b $BRANCH_NAME
           git add report.txt
-          git commit -m "Bump version to: ${{ steps.bump.outputs.next_tag }}"
-          # git tag ${{ steps.bump.outputs.next_tag }}
-          git push -u origin
-          # git push origin tag ${{ steps.bump.outputs.next_tag }}
+          git commit -m "Bump version to: $VERSION"
+          git push -u origin $BRANCH_NAME
+          git tag $VERSION
+          git push origin tag $VERSION
 
       - name: Create pull request
         uses: repo-sync/pull-request@v2
