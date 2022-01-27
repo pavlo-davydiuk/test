@@ -33,7 +33,7 @@ jobs:
       - name: Setup git config
         run: |
           git config user.name "GitHub Actions Bot"
-          git config user.email "<test@pd.com>"
+          git config user.email "<>"
 
       - name: Commit and push version bump
         run: |
@@ -64,3 +64,15 @@ jobs:
             * If you want to release this version just merge this PR and release workflow will be automaticaly triggered 🎉"
           pr_allow_empty: false
           github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: "${{ steps.bump.outputs.next_tag }}"
+          name: "Release ${{ steps.bump.outputs.next_tag }}"
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          files: TestKMP.podspec
