@@ -1,32 +1,115 @@
 name: Release
 
-on: 
-  push:
-    branches:
-      - main
+on:
   workflow_dispatch:
+    inputs:
+      next_version:
+        description: "Next version (if empty - PATCH version will be incremented automatically). Please use semantic versioning"
+        required: false
+
+env:
+  podspec_name: "TestKMP.podspec"
+  xcframework_name: "TestKMP.xcframework"
 
 jobs:
-  release:
-    runs-on: ubuntu-latest
+  run_tests:
+    name: Run tests
+    if: github.ref == 'refs/heads/main'
+    runs-on: macos-latest
     steps:
-      -
-        name: github
-        run: echo "${{ toJSON(github) }}"
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Check
+        run: ./gradlew detekt
+
+      - name: Build project
+        run: ./gradlew build
+
+  create_release_branch:
+    name: Create release branch and bump version
+    runs-on: ubuntu-latest
+    needs: [run_tests]
+    outputs:
+      tag: ${{ steps.bump.outputs.next_tag }}
+    steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
+      - name: Get next tag
+        id: "bump"
+        uses: allegro-actions/next-version@v1
+        with:
+          prefix: ""
+          force: ${{ github.event.inputs.next_version }}
+
+      - name: Change version in podspec file
+        run: |
+          VERSION=${{ steps.bump.outputs.next_tag }}
+          sed -i -e "s/spec.version.*= .*$/spec\.version      = \"$VERSION\"/g" "${{ env.podspec_name }}"
+
+      - name: Setup git config
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+
+      - name: Commit and push version bump
+        run: |
+          VERSION=${{ steps.bump.outputs.next_tag }}
+          BRANCH_NAME=release/$VERSION
+          git checkout -b $BRANCH_NAME
+          git add "${{ env.podspec_name }}"
+          git commit -m "Bump version to: $VERSION"
+          git push -u origin $BRANCH_NAME
+          git tag $VERSION
+          git push origin tag $VERSION
+
+      - name: Create pull request
+        uses: repo-sync/pull-request@v2
+        with:
+          source_branch: "release/${{ steps.bump.outputs.next_tag }}"
+          destination_branch: "main"
+          pr_title: "Bump version ${{ steps.bump.outputs.next_tag }}"
+          pr_body: "## Note:\n
+            * This pull request is created by workflow 🤖\n
+            ## What:\n
+            * version bump\n
+            * commit tag\n
+            * updated podspec file\n
+            ## Why:\n
+            * preparing new release\n
+            ## Next steps:\n
+            * If you want to release this version just merge this PR and release workflow will be automaticaly triggered 🎉"
+          pr_allow_empty: false
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  create_release:
+    runs-on: macos-latest
+    needs: [run_tests, create_release_branch]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # - name: Build XCFramework
+      #   run: ./gradlew assembleJsonLogicEngineReleaseXCFramework
+
+      - name: Zip XCFramework
+        run: zip -r "${{ env.xcframework_name }}.zip" "build/XCFrameworks/release/${{ env.xcframework_name }}"
+
       - name: Create Release
-        if: github.ref == 'refs/heads/main'
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: "${{ needs.addTag.outputs.new_tag }}"
-          name: "Release ${{ needs.addTag.outputs.new_tag }}"
+          tag_name: "${{ needs.create_release_branch.outputs.tag }}"
+          name: "Release ${{ needs.create_release_branch.outputs.tag }}"
           draft: false
           prerelease: false
           generate_release_notes: true
           token: ${{ secrets.GITHUB_TOKEN }}
-          files: TestKMP.podspec
+          files: "${{ env.xcframework_name }}.zip"
