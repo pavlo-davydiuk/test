@@ -37,6 +37,8 @@ jobs:
     name: Build XCFramework
     runs-on: macos-latest
     needs: [run_tests]
+    outputs:
+      sha256: ${{ steps.calculate_checksum.outputs.sha256 }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -46,6 +48,12 @@ jobs:
 
       - name: Zip XCFramework
         run: zip -r "${{ env.xcframework_zip_name }}" "build/XCFrameworks/release/${{ env.xcframework_name }}"
+
+      - name: Calculate checksum
+        id: calculate_checksum
+        run: |
+          XCFRAMEWORK_SHA256=$(shasum -a 256 JsonLogicKMP.xcframework.zip | awk '{ print $1 }')
+          echo "::set-output name=sha256::$XCFRAMEWORK_SHA256"
 
       - uses: actions/upload-artifact@v2
         with:
@@ -76,6 +84,11 @@ jobs:
         run: |
           VERSION=${{ steps.bump.outputs.next_tag }}
           sed -i -e "s/spec.version.*= .*$/spec\.version      = \"$VERSION\"/g" "${{ env.podspec_name }}"
+
+      - name: Change version in podspec file
+        run: |
+          XCFRAMEWORK_SHA256="${{ needs.build_xcframework.outputs.sha1 }}"
+          sed -i -e "s/:sha256 => \"\"$/:sha256 => \"$XCFRAMEWORK_SHA256\"/g" "${{ env.podspec_name }}"
 
       - name: Setup git config
         run: |
