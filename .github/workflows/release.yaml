@@ -1,0 +1,30 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '*.*.*'
+
+env:
+  podspec_name: "TestKMP.podspec"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Create Release
+        if: github.ref == 'refs/heads/main'
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: "${{ needs.addTag.outputs.new_tag }}"
+          name: "Release ${{ needs.addTag.outputs.new_tag }}"
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          files: TestKMP.podspec

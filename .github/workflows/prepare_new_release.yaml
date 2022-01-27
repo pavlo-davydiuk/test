@@ -1,4 +1,4 @@
-name: Prepare new version
+name: Prepare new release
 
 on:
   workflow_dispatch:
@@ -11,7 +11,7 @@ env:
   podspec_name: "TestKMP.podspec"
 
 jobs:
-  prepare_new_version:
+  prepare_new_release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -59,8 +59,8 @@ jobs:
             * commit tag\n
             * updated podspec file\n
             ## Why:\n
-            * preparing new version\n
+            * preparing new release\n
             ## Next steps:\n
-            * If you want to relase this version just merge this PR and release workflow will be automaticaly triggered 🎉"
+            * If you want to release this version just merge this PR and release workflow will be automaticaly triggered 🎉"
           pr_allow_empty: false
           github_token: ${{ secrets.GITHUB_TOKEN }}
