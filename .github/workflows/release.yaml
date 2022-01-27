@@ -3,10 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - '*.*.*'
-
-env:
-  podspec_name: "TestKMP.podspec"
+      - **
 
 jobs:
   release:
