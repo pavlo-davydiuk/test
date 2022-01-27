@@ -12,7 +12,8 @@ Pod::Spec.new do |spec|
   spec.platform = :ios
   spec.ios.deployment_target = "13.0"
 
-  spec.source       = { :git => "https://github.com/allegro/json-logic-kmp.git", :tag => "#{spec.version}" }
+  spec.source       = { :http => "#{spec.homepage}/releases/download/#{spec.version}/#{spec.name}.xcframework.zip" }
 
-  spec.vendored_frameworks = "JsonLogicKMP.xcframework"
+  spec.vendored_frameworks = "#{spec.name}.xcframework"
+end
 end
