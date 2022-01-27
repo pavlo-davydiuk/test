@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = "TestKMP"
-  spec.version      = "1.0.4"
+  spec.version      = "1.0.6"
   spec.summary      = "Kotlin multiplatform TestKMP"
   spec.description  = <<-DESC
   * Kotlin multiplatform TestKMP expressions evaluation engine
