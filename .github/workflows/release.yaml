@@ -9,7 +9,7 @@ on:
 
 env:
   podspec_name: "JsonLogicKMP.podspec"
-  xcframework_name: "JsonLogicEngine.xcframework"
+  xcframework_name: "JsonLogicKMP.xcframework"
 
 jobs:
   run_tests:
