@@ -13,6 +13,7 @@ env:
 jobs:
   prepare_new_release:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v2
         with:
@@ -71,7 +72,7 @@ jobs:
         with:
           tag_name: "${{ steps.bump.outputs.next_tag }}"
           name: "Release ${{ steps.bump.outputs.next_tag }}"
-          draft: false
+          draft: true
           prerelease: false
           generate_release_notes: true
           token: ${{ secrets.GITHUB_TOKEN }}
