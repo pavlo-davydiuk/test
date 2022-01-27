@@ -95,7 +95,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build XCFramework
-        run: ./gradlew assembleJsonLogicEngineReleaseXCFramework
+        run: ./gradlew assembleJsonLogicKMPXCFramework
 
       - name: Zip XCFramework
         run: zip -r "${{ env.xcframework_name }}.zip" "build/XCFrameworks/release/${{ env.xcframework_name }}"
