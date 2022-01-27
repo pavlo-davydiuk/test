@@ -1,0 +1,6 @@
+framework module JsonLogicEngine {
+    umbrella header "JsonLogicEngine.h"
+
+    export *
+    module * { export * }
+}
