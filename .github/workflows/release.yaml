@@ -85,9 +85,9 @@ jobs:
           VERSION=${{ steps.bump.outputs.next_tag }}
           sed -i -e "s/spec.version.*= .*$/spec\.version      = \"$VERSION\"/g" "${{ env.podspec_name }}"
 
-      - name: Change version in podspec file
+      - name: Change SHA256 in podspec file
         run: |
-          XCFRAMEWORK_SHA256="${{ needs.build_xcframework.outputs.sha1 }}"
+          XCFRAMEWORK_SHA256="${{ needs.build_xcframework.outputs.sha256 }}"
           sed -i -e "s/:sha256 => \"\"$/:sha256 => \"$XCFRAMEWORK_SHA256\"/g" "${{ env.podspec_name }}"
 
       - name: Setup git config

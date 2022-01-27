@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = "JsonLogicKMP"
-  spec.version      = "0.1.1-continous-integration-basics-SNAPSHOT"
+  spec.version      = "0.0.1"
   spec.summary      = "Kotlin multiplatform JsonLogic"
   spec.description  = <<-DESC
   * Kotlin multiplatform JsonLogic expressions evaluation engine
