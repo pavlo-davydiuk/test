@@ -8,8 +8,8 @@ on:
         required: false
 
 env:
-  podspec_name: "TestKMP.podspec"
-  xcframework_name: "TestKMP.xcframework"
+  podspec_name: "JsonLogicKMP.podspec"
+  xcframework_name: "JsonLogicEngine.xcframework"
 
 jobs:
   run_tests:
@@ -83,9 +83,7 @@ jobs:
             * commit tag\n
             * updated podspec file\n
             ## Why:\n
-            * preparing new release\n
-            ## Next steps:\n
-            * If you want to release this version just merge this PR and release workflow will be automaticaly triggered 🎉"
+            * New release"
           pr_allow_empty: false
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -96,8 +94,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # - name: Build XCFramework
-      #   run: ./gradlew assembleJsonLogicEngineReleaseXCFramework
+      - name: Build XCFramework
+        run: ./gradlew assembleJsonLogicEngineReleaseXCFramework
 
       - name: Zip XCFramework
         run: zip -r "${{ env.xcframework_name }}.zip" "build/XCFrameworks/release/${{ env.xcframework_name }}"
