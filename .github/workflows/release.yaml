@@ -1,14 +1,19 @@
 name: Release
 
-on:
+on: 
   push:
-    tags:
-      - "*"
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
+      -
+        name: github
+        run: echo "${{ toJSON(github) }}"
+
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
