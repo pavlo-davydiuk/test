@@ -15,4 +15,5 @@ Pod::Spec.new do |spec|
   spec.source       = { :http => "#{spec.homepage}/releases/download/#{spec.version}/#{spec.name}.xcframework.zip" }
 
   spec.vendored_frameworks = "#{spec.name}.xcframework"
+  spec.preserve_paths = '*'
 end
