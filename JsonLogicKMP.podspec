@@ -17,4 +17,5 @@ Pod::Spec.new do |spec|
                       }
 
   spec.vendored_frameworks = "#{spec.name}.xcframework"
+  spec.preserve_paths      = "#{spec.name}.xcframework"
 end
