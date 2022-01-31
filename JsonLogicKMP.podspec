@@ -5,7 +5,7 @@ Pod::Spec.new do |spec|
   spec.description  = <<-DESC
   * Kotlin multiplatform JsonLogic expressions evaluation engine
                    DESC
-  spec.homepage     = "https://github.com/allegro/json-logic-kmp"
+  spec.homepage     = "https://github.com/pavlo-davydiuk/test"
   spec.license      = { :type => "The Apache License, Version 2.0", :file => "LICENSE" }
   spec.author       = { "Allegro" => "opensource@allegro.pl" }
 
