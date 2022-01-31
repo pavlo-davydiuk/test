@@ -148,6 +148,7 @@ jobs:
           files: "${{ env.xcframework_zip_name }}"
 
   publish_to_maven:
+    name: Publish to maven
     runs-on: ubuntu-latest
     needs: [run_tests, build_xcframework, create_release_branch, create_github_release]
     steps:

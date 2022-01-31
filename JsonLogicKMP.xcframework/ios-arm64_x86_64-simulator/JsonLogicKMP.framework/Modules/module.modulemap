@@ -1,6 +1,0 @@
-framework module JsonLogicKMP {
-    umbrella header "JsonLogicKMP.h"
-
-    export *
-    module * { export * }
-}
