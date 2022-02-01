@@ -49,7 +49,7 @@ jobs:
       - name: Zip XCFramework
         run: |
           mv "build/XCFrameworks/release/${{ env.xcframework_name }}" .
-          zip -r "${{ env.xcframework_zip_name }}" "${{ env.xcframework_name }}"
+          zip -r "${{ env.xcframework_zip_name }}" "${{ env.xcframework_name }}" LICENSE
 
       - name: Calculate checksum
         id: calculate_checksum
