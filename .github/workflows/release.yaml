@@ -90,7 +90,7 @@ jobs:
       - name: Change SHA256 in podspec file
         run: |
           XCFRAMEWORK_SHA256="${{ needs.build_xcframework.outputs.sha256 }}"
-          sed -i -e "s/:sha256 => \"\"$/:sha256 => \"$XCFRAMEWORK_SHA256\"/g" "${{ env.podspec_name }}"
+          sed -i -e "s/:sha256.*=>.*$/:sha256 => \"$XCFRAMEWORK_SHA256\"/g" "${{ env.podspec_name }}"
 
       - name: Setup git config
         run: |
