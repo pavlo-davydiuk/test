@@ -8,7 +8,7 @@ on:
         required: false
 
 env:
-  podspec_name: "JsonLogicKMP.podspec"
+  podspec_name: "TestKMP.podspec"
   xcframework_name: "JsonLogicKMP.xcframework"
   xcframework_zip_name: "JsonLogicKMP.xcframework.zip"
   xcframework_artifact_key: "xcframework"
@@ -154,6 +154,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
+          ref: "${{ needs.create_release_branch.outputs.tag }}"
           fetch-depth: 0
 
       - name: Set up JDK 11
@@ -180,6 +181,8 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: "${{ needs.create_release_branch.outputs.tag }}"
 
       - name: Publish to cocoadpods
         env:

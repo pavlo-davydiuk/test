@@ -1,5 +1,5 @@
 Pod::Spec.new do |spec|
-  spec.name         = "JsonLogicKMP"
+  spec.name         = "TestKMP"
   spec.version      = "1.0.16"
   spec.summary      = "Kotlin multiplatform JsonLogic"
   spec.description  = <<-DESC
@@ -17,5 +17,5 @@ Pod::Spec.new do |spec|
                       }
 
   spec.vendored_frameworks = "#{spec.name}.xcframework"
-  spec.preserve_paths      = "#{spec.name}.xcframework"
+
 end
