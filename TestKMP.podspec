@@ -14,17 +14,17 @@ Pod::Spec.new do |spec|
 
   spec.source       = { :http => "#{spec.homepage}/releases/download/#{spec.version}/JsonLogicKMP.xcframework.zip",
                       }
-
-  spec.subspec 'JsonLogicCore' do |mySubLib|
-    mySubLib.vendored_frameworks = "JsonLogicCore.xcframework"
+                        
+  spec.subspec 'JsonLogicOperationsApi' do |operationsApi|
+    operationsApi.vendored_frameworks = "JsonLogicOperationsApi.xcframework"
   end
 
-  spec.subspec 'JsonLogicOperationsApi' do |mySubLib|
-    mySubLib.vendored_frameworks = "JsonLogicOperationsApi.xcframework"
+  spec.subspec 'JsonLogicOperationsStdlib' do |operationsStdlib|
+    operationsStdlib.vendored_frameworks = "JsonLogicOperationsStdlib.xcframework"
   end
 
-  spec.subspec 'JsonLogicOperationsStdlib' do |mySubLib|
-    mySubLib.vendored_frameworks = "JsonLogicOperationsStdlib.xcframework"
+  spec.subspec 'JsonLogicCore' do |core|
+    core.vendored_frameworks = "JsonLogicCore.xcframework"
   end
 
 end
