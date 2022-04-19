@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = "TestKMP"
-  spec.version      = "0.2.3"
+  spec.version      = "0.2.6"
   spec.summary      = "Kotlin multiplatform JsonLogic"
   spec.description  = <<-DESC
   * Kotlin multiplatform JsonLogic expressions evaluation engine
@@ -15,15 +15,15 @@ Pod::Spec.new do |spec|
   spec.source       = { :http => "#{spec.homepage}/releases/download/#{spec.version}/JsonLogicKMP.xcframework.zip",
                       }
                         
-  spec.subspec 'JsonLogicOperationsApi' do |operationsApi|
+  spec.subspec 'OperationsApi' do |operationsApi|
     operationsApi.vendored_frameworks = "JsonLogicOperationsApi.xcframework"
   end
 
-  spec.subspec 'JsonLogicOperationsStdlib' do |operationsStdlib|
+  spec.subspec 'OperationsStdlib' do |operationsStdlib|
     operationsStdlib.vendored_frameworks = "JsonLogicOperationsStdlib.xcframework"
   end
 
-  spec.subspec 'JsonLogicCore' do |core|
+  spec.subspec 'Core' do |core|
     core.vendored_frameworks = "JsonLogicCore.xcframework"
   end
 
